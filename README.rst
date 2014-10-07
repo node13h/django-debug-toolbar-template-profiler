@@ -1,7 +1,7 @@
 Django Debug Toolbar Template Profiler
 ======================================
 
-This panel displays template time spent rendering each template and
+This panel displays time spent rendering each template and
 graphical respresentation on the timeline (see screenshot)
 
 
