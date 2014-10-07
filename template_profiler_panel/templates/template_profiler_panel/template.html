@@ -1,0 +1,57 @@
+{% load i18n %}
+<h4>{{ templates|length }} {% trans 'calls to Template.render()' %}</h4>
+<div>
+  <table>
+    <colgroup>
+      <col style="width:5%" />
+      <col style="width:30%" />
+      <col style="width:60%" />
+      <col style="width:5%" />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>{% trans 'Stack Level' %}</th>
+        <th>{% trans 'Template Name' %}</th>
+        <th>{% trans 'Timeline' %}</th>
+        <th>{% trans 'Time (ms)' %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for template in templates %}
+      <tr class="{% cycle 'djDebugOdd' 'djDebugEven' %}">
+        <td>
+          <div style="background-color: {{ template.color.bg }}; color: {{ template.color.text }}; width: {{ template.level }}px; margin-right: 4px; padding-left: 2px;">{{ template.level }}</div>
+        </td>
+        <td>{{ template.name }}</td>
+        <td class="timeline">
+          <div class="djDebugTimeline">
+            <div class="djDebugLineChart" style="left: {{ template.offset_p }}%;">
+              <strong title="Start {{ template.start }}" style="min-width: 1px; width: {{ template.rel_duration_p }}%; background-color: {{ template.color.bg }};">&nbsp;</strong>
+            </div>
+          </div>
+        </td>
+        <td>{{ template.time|floatformat }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h4>{% trans 'Summary' %}</h4>
+<table>
+  <thead>
+    <tr>
+      <th>{% trans 'Template Name' %}</th>
+      <th>{% trans 'Time (ms)' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for k, v in summary.items %}
+    <tr class="{% cycle 'djDebugOdd' 'djDebugEven' %}">
+      <td>{{ k }}</td>
+      <td>{{ v|floatformat }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
