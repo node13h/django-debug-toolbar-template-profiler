@@ -11,8 +11,7 @@ Install
 - pip install django-debug-toolbar-template-profiler
 
 - Add 'template_profiler_panel.panels.template.TemplateProfilerPanel' to
-  DEBUG_TOOLBAR_PANELS in your settings.py (.. _see how: http://django-debug-toolbar.readthedocs.org/en/latest/configuration.html#debug-toolbar-panels)
-
+  DEBUG_TOOLBAR_PANELS in your settings.py (see `how to add panel`_)
 - Add 'template_profiler_panel' to INSTALLED_APPS
 
 
@@ -20,3 +19,5 @@ Screenshot
 ==========
 .. image:: screenshot.png
 
+
+.. _how to add panel: http://django-debug-toolbar.readthedocs.org/en/latest/configuration.html#debug-toolbar-panels
