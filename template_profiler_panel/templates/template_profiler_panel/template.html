@@ -25,8 +25,8 @@
         <td>{{ template.name }}</td>
         <td class="timeline">
           <div class="djDebugTimeline">
-            <div class="djDebugLineChart" style="left: {{ template.offset_p }}%;">
-              <strong title="Start {{ template.start }}" style="min-width: 1px; width: {{ template.rel_duration_p }}%; background-color: {{ template.color.bg }};">&nbsp;</strong>
+            <div class="djDebugLineChart" style="left: {{ template.offset_p|stringformat:'f' }}%;">
+              <strong title="Start {{ template.start }}" style="min-width: 1px; width: {{ template.rel_duration_p|stringformat:'f' }}%; background-color: {{ template.color.bg }};">&nbsp;</strong>
             </div>
           </div>
         </td>
