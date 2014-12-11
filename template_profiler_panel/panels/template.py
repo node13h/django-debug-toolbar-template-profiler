@@ -140,4 +140,5 @@ class TemplateProfilerPanel(Panel):
         self.total = len(self.templates)
 
         self.record_stats(
-            {'templates': self.templates, 'summary': dict(summary)})
+            {'templates': sorted(self.templates, key=lambda d: d['start']),
+             'summary': sorted(summary.items(), key=lambda t: -t[1])})
