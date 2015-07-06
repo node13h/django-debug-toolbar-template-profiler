@@ -8,7 +8,7 @@ setup(
     long_description=open('README.rst', encoding='utf-8').read(),
     author='Sergej Alikov',
     author_email='sergej.alikov@gmail.com',
-    url='https://github.com/node13h/django-debug-toolbartemplate-profiler',
+    url='https://github.com/node13h/django-debug-toolbar-template-profiler',
     download_url='https://pypi.python.org/pypi/django-debug-toolbar-template-profiler',
     license='Simplified BSD License',
     packages=find_packages(),
