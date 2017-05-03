@@ -2,11 +2,20 @@
 
 from __future__ import absolute_import
 import unittest
+import os
 
-from mock import MagicMock
+try:
+    from mock import MagicMock
+except ImportError:
+    from unittest.mock import MagicMock
+
+from django.core.wsgi import get_wsgi_application
 from django.template import Context, Template
 
-from ..panels.template import TemplateProfilerPanel, template_rendered
+from template_profiler_panel.panels.template import TemplateProfilerPanel, template_rendered
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'template_profiler_panel.tests.dummy_settings'
+application = get_wsgi_application()
 
 
 class TemplateProfilerPanelTestCase(unittest.TestCase):
@@ -56,3 +65,8 @@ class TemplateProfilerPanelTestCase(unittest.TestCase):
 
     def test_template(self):
         self.assertTrue(self.panel.template)
+
+
+if __name__ == '__main__':
+    unittest.main()
+
