@@ -3,10 +3,17 @@ from collections import defaultdict
 from inspect import stack
 
 from django.dispatch import Signal
-from django.template import Template
 from django.utils.translation import ugettext_lazy as _
 
 from debug_toolbar.panels import Panel
+
+from django.template import Template as DjangoTemplate
+
+try:
+    jinja_import = True
+    from jinja2 import Template as JinjaTemplate
+except ImportError:
+    jinja_import = False
 
 
 def dummy_color_generator():
@@ -24,25 +31,38 @@ template_rendered = Signal(
     providing_args=['instance', 'start', 'end', 'level'])
 
 
-def template_render_wrapper(self, context):
-    result = None
-    if hasattr(Template, 'tp_saved_render'):
-        t_start = time()
-        try:
-            result = Template.tp_saved_render(self, context)
-        finally:
-            t_end = time()
+def template_render_wrapper_django(self, context):
+    t_start = time()
+    result = DjangoTemplate.tp_saved_render(self, context)
+    t_end = time()
 
-            template_rendered.send(
-                sender=Template, instance=self, start=t_start, end=t_end,
-                level=len(stack()))
+    template_rendered.send(
+        sender=DjangoTemplate, instance=self, start=t_start, end=t_end,
+        level=len(stack()))
 
     return result
 
-# Wrap the original Template.render
-if not hasattr(Template, 'tp_saved_render'):
-    Template.tp_saved_render = Template.render
-    Template.render = template_render_wrapper
+
+def template_render_wrapper_jinja(self, context):
+    t_start = time()
+    result = JinjaTemplate.tp_saved_render(self, context)
+    t_end = time()
+
+    template_rendered.send(
+        sender=JinjaTemplate, instance=self, start=t_start, end=t_end,
+        level=len(stack()))
+
+    return result
+
+
+DjangoTemplate.engine = DjangoTemplate
+DjangoTemplate.tp_saved_render = DjangoTemplate.render
+DjangoTemplate.render = template_render_wrapper_django
+
+if jinja_import:
+    JinjaTemplate.engine = JinjaTemplate
+    JinjaTemplate.tp_saved_render = JinjaTemplate.render
+    JinjaTemplate.render = template_render_wrapper_jinja
 
 
 class TemplateProfilerPanel(Panel):
@@ -62,7 +82,7 @@ class TemplateProfilerPanel(Panel):
         self.colors = {}
         self.templates = []
         self.color_generator = contrasting_color_generator()
-        return super(TemplateProfilerPanel, self).__init__(*args, **kwargs)
+        super(TemplateProfilerPanel, self).__init__(*args, **kwargs)
 
     @property
     def nav_title(self):
