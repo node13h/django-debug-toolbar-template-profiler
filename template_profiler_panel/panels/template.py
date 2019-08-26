@@ -6,6 +6,7 @@ from django.dispatch import Signal
 from django.utils.translation import ugettext_lazy as _
 
 from debug_toolbar.panels import Panel
+from debug_toolbar.panels.sql.utils import contrasting_color_generator
 
 from django.template import Template as DjangoTemplate
 
@@ -14,18 +15,6 @@ try:
     from jinja2 import Template as JinjaTemplate
 except ImportError:
     jinja_import = False
-
-
-def dummy_color_generator():
-    while True:
-        yield '#bbbbbb'
-
-# Contrasting_color_generator is available since debug toolbar version 1.1.
-try:
-    from debug_toolbar.panels.sql.utils import contrasting_color_generator
-except ImportError:
-    # Support older versions of debug toolbar
-    contrasting_color_generator = dummy_color_generator
 
 template_rendered = Signal(
     providing_args=['instance', 'start', 'end', 'level'])

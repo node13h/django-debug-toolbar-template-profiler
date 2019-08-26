@@ -13,7 +13,7 @@ setup(
     license='Simplified BSD License',
     packages=find_packages(),
     install_requires=[
-        'django-debug-toolbar>=1.0',
+        'django-debug-toolbar>=1.1',
     ],
     include_package_data=True,
     zip_safe=False,                 # because we're including static files
