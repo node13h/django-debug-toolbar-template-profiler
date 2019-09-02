@@ -1,57 +1,11 @@
-from time import time
 from collections import defaultdict
-from inspect import stack
 
-from django.dispatch import Signal
 from django.utils.translation import ugettext_lazy as _
 
 from debug_toolbar.panels import Panel
 from debug_toolbar.panels.sql.utils import contrasting_color_generator
 
-from django.template import Template as DjangoTemplate
-
-try:
-    jinja_import = True
-    from jinja2 import Template as JinjaTemplate
-except ImportError:
-    jinja_import = False
-
-template_rendered = Signal(
-    providing_args=['instance', 'start', 'end', 'level'])
-
-
-def template_render_wrapper_django(self, context):
-    t_start = time()
-    result = DjangoTemplate.tp_saved_render(self, context)
-    t_end = time()
-
-    template_rendered.send(
-        sender=DjangoTemplate, instance=self, start=t_start, end=t_end,
-        level=len(stack()))
-
-    return result
-
-
-def template_render_wrapper_jinja(self, context):
-    t_start = time()
-    result = JinjaTemplate.tp_saved_render(self, context)
-    t_end = time()
-
-    template_rendered.send(
-        sender=JinjaTemplate, instance=self, start=t_start, end=t_end,
-        level=len(stack()))
-
-    return result
-
-
-DjangoTemplate.engine = DjangoTemplate
-DjangoTemplate.tp_saved_render = DjangoTemplate.render
-DjangoTemplate.render = template_render_wrapper_django
-
-if jinja_import:
-    JinjaTemplate.engine = JinjaTemplate
-    JinjaTemplate.tp_saved_render = JinjaTemplate.render
-    JinjaTemplate.render = template_render_wrapper_jinja
+from template_profiler_panel.signals import template_rendered
 
 
 class TemplateProfilerPanel(Panel):
