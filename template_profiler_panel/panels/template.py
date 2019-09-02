@@ -60,17 +60,14 @@ class TemplateProfilerPanel(Panel):
     '''
 
     template = 'template_profiler_panel/template.html'
-    colors = None
-    templates = None
-    color_generator = None
-    t_min = 0
-    t_max = 0
-    total = 0
 
     def __init__(self, *args, **kwargs):
         self.colors = {}
         self.templates = []
         self.color_generator = contrasting_color_generator()
+        self.t_min = 0
+        self.t_max = 0
+        self.total = 0
         super(TemplateProfilerPanel, self).__init__(*args, **kwargs)
 
     @property
