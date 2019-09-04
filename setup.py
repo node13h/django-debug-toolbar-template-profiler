@@ -9,7 +9,9 @@ setup(
     author='Sergej Alikov',
     author_email='sergej.alikov@gmail.com',
     url='https://github.com/node13h/django-debug-toolbar-template-profiler',
-    download_url='https://pypi.python.org/pypi/django-debug-toolbar-template-profiler',
+    project_urls={
+        "Changelog": "https://github.com/node13h/django-debug-toolbar-template-profiler/blob/master/HISTORY.rst"
+    },
     license='Simplified BSD License',
     packages=find_packages(),
     install_requires=[
