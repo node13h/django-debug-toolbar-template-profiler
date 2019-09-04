@@ -11,7 +11,7 @@ that displays time spent rendering each template.
 
 For example:
 
-.. image:: screenshot.png
+.. image:: https://raw.githubusercontent.com/node13h/django-debug-toolbar-template-profiler/master/screenshot.png
 
 Installation
 ============
