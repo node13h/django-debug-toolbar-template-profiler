@@ -8,6 +8,8 @@ setup(
     long_description=open('README.rst', encoding='utf-8').read(),
     author='Sergej Alikov',
     author_email='sergej.alikov@gmail.com',
+    maintainer='Adam Johnson',
+    maintainer_email='me@adamj.eu',
     url='https://github.com/node13h/django-debug-toolbar-template-profiler',
     project_urls={
         "Changelog": "https://github.com/node13h/django-debug-toolbar-template-profiler/blob/master/HISTORY.rst"
