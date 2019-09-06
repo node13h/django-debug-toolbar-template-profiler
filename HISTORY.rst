@@ -17,6 +17,8 @@ Pending Release
 * Skip templates as configured in django-debug-toolbar's
   ``SKIP_TEMPLATE_PREFIXES`` setting
   (`PR #11 <https://github.com/node13h/django-debug-toolbar-template-profiler/pull/11>`__).
+* Only monkey patch ``Template.render()`` methods if the panel is in use
+  (`PR #12 <https://github.com/node13h/django-debug-toolbar-template-profiler/pull/12>`__).
 
 1.0.2 (2017-05-03)
 ------------------

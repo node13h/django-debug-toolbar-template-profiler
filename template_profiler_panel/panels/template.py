@@ -1,12 +1,16 @@
+import inspect
 from collections import defaultdict
+from time import time
 
-from django.conf import settings
+import wrapt
+from django.dispatch import Signal
 from django.utils.translation import ugettext_lazy as _
 
 from debug_toolbar.panels import Panel
 from debug_toolbar.panels.sql.utils import contrasting_color_generator
 
-from template_profiler_panel.signals import template_rendered
+
+template_rendered = Signal(providing_args=['instance', 'start', 'end', 'level'])
 
 
 class TemplateProfilerPanel(Panel):
@@ -23,7 +27,55 @@ class TemplateProfilerPanel(Panel):
         self.t_min = 0
         self.t_max = 0
         self.total = 0
+        self.monkey_patch_template_classes()
+        self.is_enabled = False
+        template_rendered.connect(self.record)
         super(TemplateProfilerPanel, self).__init__(*args, **kwargs)
+
+    have_monkey_patched_template_classes = False
+
+    @classmethod
+    def monkey_patch_template_classes(cls):
+        if cls.have_monkey_patched_template_classes:
+            return
+
+        from django.template import Template as DjangoTemplate
+        template_classes = [DjangoTemplate]
+
+        try:
+            from jinja2 import Template as Jinja2Template
+        except ImportError:
+            pass
+        else:
+            template_classes.append(Jinja2Template)
+
+        @wrapt.decorator
+        def render_wrapper(wrapped, instance, args, kwargs):
+            start = time()
+            result = wrapped(*args, **kwargs)
+            end = time()
+
+            stack_depth = 1
+            current_frame = inspect.currentframe()
+            while True:
+                current_frame = current_frame.f_back
+                if current_frame is None:
+                    break
+                stack_depth += 1
+
+            template_rendered.send(
+                sender=instance.__class__,
+                instance=instance,
+                start=start,
+                end=end,
+                level=stack_depth,
+            )
+            return result
+
+        for template_class in template_classes:
+            template_class.render = render_wrapper(template_class.render)
+
+        cls.have_monkey_patched_template_classes = True
 
     @property
     def nav_title(self):
@@ -41,9 +93,11 @@ class TemplateProfilerPanel(Panel):
     def _get_color(self, level):
         return self.colors.setdefault(level, next(self.color_generator))
 
-    def record(self, sender, instance, start, end, level, **kwargs):
-        template_name = instance.name
+    def record(self, instance, start, end, level, **kwargs):
+        if not self.enabled:
+            return
 
+        template_name = instance.name
         # Logic copied from django-debug-toolbar:
         # https://github.com/jazzband/django-debug-toolbar/blob/5d095f66fde8f10b45a93c0b35be0a85762b0458/debug_toolbar/panels/templates/panel.py#L77
         is_skipped_template = isinstance(template_name, str) and (
@@ -69,10 +123,10 @@ class TemplateProfilerPanel(Panel):
         })
 
     def enable_instrumentation(self):
-        template_rendered.connect(self.record)
+        self.is_enabled = True
 
     def disable_instrumentation(self):
-        template_rendered.disconnect(self.record)
+        self.is_enabled = False
 
     def _calc_p(self, part, whole):
         return (part / whole) * 100.0
