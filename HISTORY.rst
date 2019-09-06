@@ -6,6 +6,9 @@ Pending Release
 
 .. Insert new release notes below this line
 
+1.1.0 (2019-09-06)
+------------------
+
 * Improve instrumentation to avoid interfering with other monkey patches on
   ``Template.render()``
   (`Commit a961216 <https://github.com/node13h/django-debug-toolbar-template-profiler/commit/a96121620d48c0d8f2c8b4e6eaf18eb265a5b48e>`__).

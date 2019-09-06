@@ -1,3 +1,4 @@
 *.pyc
 django_debug_toolbar_template_profiler.egg-info
+build
 dist
