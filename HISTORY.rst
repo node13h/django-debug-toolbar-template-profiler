@@ -14,6 +14,9 @@ Pending Release
   (`Commit f0b8b50 <https://github.com/node13h/django-debug-toolbar-template-profiler/commit/f0b8b50da92e160fcf878c4deabb598b2e901dd3>`__).
 * Instrument Jinja2 templates
   (`PR #5 <https://github.com/node13h/django-debug-toolbar-template-profiler/pull/5>`__).
+* Skip templates as configured in django-debug-toolbar's
+  ``SKIP_TEMPLATE_PREFIXES`` setting
+  (`PR #11 <https://github.com/node13h/django-debug-toolbar-template-profiler/pull/11>`__).
 
 1.0.2 (2017-05-03)
 ------------------

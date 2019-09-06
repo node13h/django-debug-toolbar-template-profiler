@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from debug_toolbar.panels import Panel
@@ -41,6 +42,18 @@ class TemplateProfilerPanel(Panel):
         return self.colors.setdefault(level, next(self.color_generator))
 
     def record(self, sender, instance, start, end, level, **kwargs):
+        template_name = instance.name
+
+        # Logic copied from django-debug-toolbar:
+        # https://github.com/jazzband/django-debug-toolbar/blob/5d095f66fde8f10b45a93c0b35be0a85762b0458/debug_toolbar/panels/templates/panel.py#L77
+        is_skipped_template = isinstance(template_name, str) and (
+            template_name.startswith("debug_toolbar/")
+            or template_name.startswith(
+                tuple(self.toolbar.config["SKIP_TEMPLATE_PREFIXES"])
+            )
+        )
+        if is_skipped_template:
+            return
 
         bg = self._get_color(level)
         text = '#ffffff' if int(bg[1:], 16) < 0x8fffff else '#000000'
@@ -51,7 +64,7 @@ class TemplateProfilerPanel(Panel):
             'end': end,
             'time': (end - start) * 1000.0,
             'level': level,
-            'name': instance.name,
+            'name': template_name,
             'color': color,
         })
 
