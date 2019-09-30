@@ -17,7 +17,7 @@ setup(
     license='Simplified BSD License',
     packages=find_packages(),
     install_requires=[
-        'django-debug-toolbar>=1.1,<2.0',
+        'django-debug-toolbar>=2.0',
         'wrapt',
     ],
     include_package_data=True,
