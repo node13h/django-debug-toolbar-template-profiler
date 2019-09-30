@@ -6,6 +6,9 @@ Pending Release
 
 .. Insert new release notes below this line
 
+2.0.0 (2019-09-30)
+------------------
+
 * Upgrade to support django-debug-toolbar 2.0+.
 
 1.1.0 (2019-09-06)
