@@ -20,8 +20,6 @@ First, you'll need to install and configure django-debug-toolbar as per its
 `installation instructions
 <https://django-debug-toolbar.readthedocs.io/en/latest/installation.html>`__.
 
-**Note:** currently django-debug-toolbar 2.0+ is not supported.
-
 Second, install this package:
 
 .. code-block:: sh
