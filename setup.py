@@ -3,9 +3,10 @@ from io import open
 
 setup(
     name='django-debug-toolbar-template-profiler',
-    version='2.0.0',
+    version='2.0.1',
     description='Displays template rendering time on the timeline',
     long_description=open('README.rst', encoding='utf-8').read(),
+    long_description_content_type="text/x-rst",
     author='Sergej Alikov',
     author_email='sergej.alikov@gmail.com',
     maintainer='Adam Johnson',

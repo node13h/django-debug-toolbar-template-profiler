@@ -6,6 +6,12 @@ Pending Release
 
 .. Insert new release notes below this line
 
+2.0.1 (2020-04-29)
+------------------
+
+* Fix a possible ``ZeroDivisionError``
+  (`PR #15 <https://github.com/node13h/django-debug-toolbar-template-profiler/pull/15`__).
+
 2.0.0 (2019-09-30)
 ------------------
 
