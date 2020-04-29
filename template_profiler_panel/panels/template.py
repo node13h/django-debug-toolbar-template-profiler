@@ -129,7 +129,8 @@ class TemplateProfilerPanel(Panel):
         self.is_enabled = False
 
     def _calc_p(self, part, whole):
-        return (part / whole) * 100.0
+        # return the percentage of part or 100% if whole is zero
+        return (part / whole) * 100.0 if whole else 100.0
 
     def _calc_timeline(self, start, end):
         result = {}
