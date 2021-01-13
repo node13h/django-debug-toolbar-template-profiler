@@ -3,7 +3,7 @@ from io import open
 
 setup(
     name='django-debug-toolbar-template-profiler',
-    version='2.0.1',
+    version='2.0.2',
     description='Displays template rendering time on the timeline',
     long_description=open('README.rst', encoding='utf-8').read(),
     long_description_content_type="text/x-rst",
