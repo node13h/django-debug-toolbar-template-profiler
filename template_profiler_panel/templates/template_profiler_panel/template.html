@@ -4,7 +4,8 @@
   <table>
     <colgroup>
       <col style="width:5%" />
-      <col style="width:30%" />
+      <col style="width:10%" />
+      <col style="width:1%" />
       <col style="width:60%" />
       <col style="width:5%" />
     </colgroup>
@@ -12,6 +13,7 @@
       <tr>
         <th>{% trans 'Stack Level' %}</th>
         <th>{% trans 'Template Name' %}</th>
+        <th>{% trans 'Trace' %}</th>
         <th>{% trans 'Timeline' %}</th>
         <th>{% trans 'Time (ms)' %}</th>
       </tr>
@@ -23,10 +25,36 @@
           <div style="background-color: {{ template.color.bg }}; color: {{ template.color.text }}; width: {{ template.level }}px; margin-right: 4px; padding-left: 2px;">{{ template.level }}</div>
         </td>
         <td>{{ template.name }}</td>
+        <td>
+           <a href="javascript:$('.timeline_toggle_{{ forloop.counter }}').toggle();">
+              <div class="timeline_toggle_{{ forloop.counter }}">&#9658;</div>
+              <div class="timeline_toggle_{{ forloop.counter }}" style="display: none;">&#9660;</div>
+           </a>
+        </td>
         <td class="timeline">
-          <div class="djDebugTimeline">
+          <div class="djDebugTimeline" style="position:relative;">
             <div class="djDebugLineChart" style="margin-left: {{ template.offset_p|stringformat:'f' }}%;">
-              <div title="Start {{ template.start }}" style="min-width: 1px; width: {{ template.rel_duration_p|stringformat:'f' }}%; background-color: {{ template.color.bg }};">&nbsp;</div>
+               <div title="Runtime {{ template.relative_start|floatformat:2 }} - {{ template.relative_end|floatformat:2 }} ms" style="min-width: 1px; width: {{ template.rel_duration_p|stringformat:'f' }}%; background-color: {{ template.color.bg }};">
+                  &nbsp;</div>
+            </div>
+            <div style="height: 200px; position:relative; display: none;" class="timeline_toggle_{{ forloop.counter }}">
+            {% for time_item in template.processing_timeline %}
+               <span title="{{ time_item.name }}
+Runtime {{ time_item.relative_start|floatformat:2 }} - {{ time_item.relative_end|floatformat:2 }} ms
+Duration {{ time_item.duration|floatformat:2  }} ms
+{% if time_item.position %}Lines {{ time_item.position.0 }} - {{ time_item.position.1 }}{% endif %}
+Depth {{ time_item.level|add:1 }}
+                  " style="
+                  min-width: 1px;
+                  margin-left: {{ time_item.offset_p|stringformat:'f' }}%;
+                  width: {{ time_item.rel_duration_p|stringformat:'f' }}%;
+                  background-color: {{ time_item.bg_color }};
+                  top: calc({{ time_item.level }}px * 18);
+                  position: absolute;
+                  {# border: red 0.1px solid; #}
+                  opacity: 0.9;
+                  ">&nbsp;</span>
+            {% endfor %}
             </div>
           </div>
         </td>
