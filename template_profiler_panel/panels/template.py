@@ -214,7 +214,7 @@ class TemplateProfilerPanel(Panel):
             if 'node' in time_item:
                 position = time_item['node'].token.position
             else:
-                False
+                position = False
             level = time_item['level'] if 'level' in time_item else 0
             if level > max_level:
                 max_level = level
