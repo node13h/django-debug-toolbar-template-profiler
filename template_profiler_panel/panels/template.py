@@ -54,6 +54,7 @@ class TemplateProfilerPanel(Panel):
     '''
 
     template = 'template_profiler_panel/template.html'
+    scripts = ["static/js/template_profiler.js"]
 
     def __init__(self, *args, **kwargs):
         self.colors = {}

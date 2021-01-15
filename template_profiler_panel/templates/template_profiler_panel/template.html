@@ -50,14 +50,15 @@ Runtime {{ time_item.relative_start|floatformat:2 }} - {{ time_item.relative_end
 Duration {{ time_item.duration|floatformat:2  }} ms
 {% if time_item.position %}Lines {{ time_item.position.0 }} - {{ time_item.position.1 }}{% endif %}
 Depth {{ time_item.level|add:1 }}
-                  " style="
+                  "
+                  class="timeline_item"
+                  style="
                   min-width: 1px;
                   margin-left: {{ time_item.offset_p|stringformat:'f' }}%;
                   width: {{ time_item.rel_duration_p|stringformat:'f' }}%;
                   background-color: {{ time_item.bg_color }};
                   top: calc({{ time_item.level }}px * 18);
                   position: absolute;
-                  {# border: red 0.1px solid; #}
                   opacity: 0.9;
                   ">&nbsp;</span>
             {% endfor %}
