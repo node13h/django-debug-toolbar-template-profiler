@@ -43,7 +43,7 @@
          <td></td>
          <td></td>
          <td>
-            <div style="height: 200px; position:relative;" class="timeline_toggle_{{ forloop.counter }} djToggleDetails_{{ forloop.counter }} djSelected" id="sqlDetails_{{ forloop.counter }}">
+            <div style="height: calc({{ template.max_level|add:1 }}px * 18); position:relative;" class="timeline_toggle_{{ forloop.counter }} djToggleDetails_{{ forloop.counter }} djSelected" id="sqlDetails_{{ forloop.counter }}">
             {% for time_item in template.processing_timeline %}
                <span title="{{ time_item.name }}
 Runtime {{ time_item.relative_start|floatformat:2 }} - {{ time_item.relative_end|floatformat:2 }} ms

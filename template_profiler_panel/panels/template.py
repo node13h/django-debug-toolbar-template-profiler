@@ -202,6 +202,7 @@ class TemplateProfilerPanel(Panel):
         result['relative_end'] = (end - self.t_min) * 1000.0
 
         result['processing_timeline'] = []
+        max_level = 0
         for time_item in processing_timeline:
             if 'node' in time_item:
                 class_name = time_item['node'].__class__.__name__
@@ -214,6 +215,9 @@ class TemplateProfilerPanel(Panel):
                 position = time_item['node'].token.position
             else:
                 False
+            level = time_item['level'] if 'level' in time_item else 0
+            if level > max_level:
+                max_level = level
             result['processing_timeline'].append({
                 'name': time_item['name'],
                 'position': position,
@@ -227,8 +231,9 @@ class TemplateProfilerPanel(Panel):
                     time_item['start']-self.t_min,
                     self.t_max - self.t_min),
                 'bg_color': bg_color,
-                'level': time_item['level'] if 'level' in time_item else 0,
+                'level': level,
             })
+        result['max_level'] = max_level
 
         return result
 
