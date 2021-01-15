@@ -3,41 +3,47 @@
 <div>
   <table>
     <colgroup>
+      <col style="width:1%" />
       <col style="width:5%" />
       <col style="width:10%" />
-      <col style="width:1%" />
       <col style="width:60%" />
       <col style="width:5%" />
     </colgroup>
     <thead>
       <tr>
+        <th></th>
         <th>{% trans 'Stack Level' %}</th>
         <th>{% trans 'Template Name' %}</th>
-        <th>{% trans 'Trace' %}</th>
         <th>{% trans 'Timeline' %}</th>
         <th>{% trans 'Time (ms)' %}</th>
       </tr>
     </thead>
     <tbody>
       {% for template in templates %}
-      <tr class="{% cycle 'djDebugOdd' 'djDebugEven' %}">
+      <tr class="{% cycle 'djDebugOdd' 'djDebugEven' %}" id="profileMain_{{ forloop.counter }}">
+        <td class="djdt-toggle">
+           <button type="button" class="djToggleSwitch" data-toggle-name="profileMain" data-toggle-id="{{ forloop.counter }}">+</button>
+        </td>
         <td>
           <div style="background-color: {{ template.color.bg }}; color: {{ template.color.text }}; width: {{ template.level }}px; margin-right: 4px; padding-left: 2px;">{{ template.level }}</div>
         </td>
         <td>{{ template.name }}</td>
-        <td>
-           <a href="javascript:$('.timeline_toggle_{{ forloop.counter }}').toggle();">
-              <div class="timeline_toggle_{{ forloop.counter }}">&#9658;</div>
-              <div class="timeline_toggle_{{ forloop.counter }}" style="display: none;">&#9660;</div>
-           </a>
-        </td>
         <td class="timeline">
           <div class="djDebugTimeline" style="position:relative;">
             <div class="djDebugLineChart" style="margin-left: {{ template.offset_p|stringformat:'f' }}%;">
                <div title="Runtime {{ template.relative_start|floatformat:2 }} - {{ template.relative_end|floatformat:2 }} ms" style="min-width: 1px; width: {{ template.rel_duration_p|stringformat:'f' }}%; background-color: {{ template.color.bg }};">
                   &nbsp;</div>
             </div>
-            <div style="height: 200px; position:relative; display: none;" class="timeline_toggle_{{ forloop.counter }}">
+          </div>
+        </td>
+        <td>{{ template.time|floatformat }}</td>
+      </tr>
+      <tr class="djToggleDetails_{{ forloop.counter }} djUnselected" id="sqlDetails_{{ forloop.counter }}">
+         <td></td>
+         <td></td>
+         <td></td>
+         <td>
+            <div style="height: 200px; position:relative;" class="timeline_toggle_{{ forloop.counter }} djToggleDetails_{{ forloop.counter }} djSelected" id="sqlDetails_{{ forloop.counter }}">
             {% for time_item in template.processing_timeline %}
                <span title="{{ time_item.name }}
 Runtime {{ time_item.relative_start|floatformat:2 }} - {{ time_item.relative_end|floatformat:2 }} ms
@@ -56,9 +62,8 @@ Depth {{ time_item.level|add:1 }}
                   ">&nbsp;</span>
             {% endfor %}
             </div>
-          </div>
-        </td>
-        <td>{{ template.time|floatformat }}</td>
+         </td>
+         <td></td>
       </tr>
       {% endfor %}
     </tbody>
