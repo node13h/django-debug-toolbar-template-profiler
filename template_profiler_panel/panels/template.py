@@ -1,11 +1,12 @@
 import inspect
-from collections import defaultdict
+from collections import Callable, defaultdict
 from time import time
 
 import wrapt
 from debug_toolbar.panels import Panel
 from debug_toolbar.panels.sql.utils import contrasting_color_generator
 from django.dispatch import Signal
+from django.urls import resolve
 from django.utils.translation import ugettext_lazy as _
 
 template_rendered = Signal(providing_args=[
@@ -14,6 +15,28 @@ template_rendered = Signal(providing_args=[
 
 
 node_element_colors = {}
+
+
+@wrapt.decorator
+def profile_method(wrapped, instance, args, kwargs):
+    start = time()
+
+    result = wrapped(*args, **kwargs)
+    end = time()
+
+    instance_name = (
+        (wrapped.__self__.__class__.__name__ + ".")
+        if hasattr(wrapped, '__self__') else ""
+    ) + wrapped.__name__
+    template_rendered.send(
+        sender=instance.__class__,
+        instance=instance_name,
+        start=start,
+        end=end,
+        processing_timeline=[],
+        level=1,
+    )
+    return result
 
 
 def get_nodelist_timeline(nodelist, level):
@@ -69,6 +92,22 @@ class TemplateProfilerPanel(Panel):
         super(TemplateProfilerPanel, self).__init__(*args, **kwargs)
 
     have_monkey_patched_template_classes = False
+
+    def generate_stats(self, request, response):
+        match = resolve(request.path)
+        func, args, kwargs = match
+        view_class = getattr(func, 'view_class', None)
+        if view_class and not hasattr(view_class, '_profile_enabled'):
+            print(view_class)
+            view_class._profile_enabled = True
+            for attr in view_class.__dict__:
+                print(attr)
+                if isinstance(getattr(view_class, attr), Callable):
+                    setattr(
+                        view_class,
+                        attr,
+                        profile_method(getattr(view_class, attr)),
+                    )
 
     @classmethod
     def monkey_patch_template_classes(cls):
@@ -151,7 +190,10 @@ class TemplateProfilerPanel(Panel):
         if not self.enabled:
             return
 
-        template_name = instance.name
+        try:
+            template_name = instance.name
+        except AttributeError:
+            template_name = instance
         # Logic copied from django-debug-toolbar:
         # https://github.com/jazzband/django-debug-toolbar/blob/5d095f66fde8f10b45a93c0b35be0a85762b0458/debug_toolbar/panels/templates/panel.py#L77
         is_skipped_template = isinstance(template_name, str) and (
