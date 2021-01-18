@@ -19,6 +19,16 @@ node_element_colors = {}
 
 @wrapt.decorator
 def profile_method(wrapped, instance, args, kwargs):
+    """
+
+    Profile method decorator
+    Usage:
+
+    from template_profiler_panel.panels.template import profile_method
+    @profile method
+    def method():
+        ...
+    """
     start = time()
 
     result = wrapped(*args, **kwargs)
@@ -37,6 +47,34 @@ def profile_method(wrapped, instance, args, kwargs):
         level=1,
     )
     return result
+
+
+class Profile:
+    """
+    Profile with block
+    Usage:
+
+    from template_profiler_panel.panels.template import Profile
+    with Profile("block name"):
+        ...
+    """
+    def __init__(self, name="Profile with", *args, **kwargs):
+        self.name = name
+
+    def __enter__(self):
+        self.start = time()
+
+    def __exit__(self, type, value, traceback):
+        self.end = time()
+
+        template_rendered.send(
+            sender=self.__class__,
+            instance=self.name,
+            start=self.start,
+            end=self.end,
+            processing_timeline=[],
+            level=1,
+        )
 
 
 def get_nodelist_timeline(nodelist, level):
