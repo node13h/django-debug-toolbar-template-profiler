@@ -102,7 +102,9 @@ class TemplateProfilerPanel(Panel):
                     break
                 stack_depth += 1
 
-            timeline = get_nodelist_timeline(instance.nodelist, 0)
+            timeline = []
+            if hasattr(instance, 'nodelist'):
+                timeline = get_nodelist_timeline(instance.nodelist, 0)
 
             template_rendered.send(
                 sender=instance.__class__,
