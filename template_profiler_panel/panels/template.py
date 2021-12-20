@@ -10,11 +10,13 @@ if django.VERSION < (3, 2):
     from django.utils.translation import ugettext_lazy as _
 else:
     from django.utils.translation import gettext_lazy as _
-    
-template_rendered = Signal(providing_args=[
-    'instance', 'start', 'end', 'level', 'processing_timeline',
-])
-
+   
+if django.VERSION < (3, 1):
+    template_rendered = Signal(providing_args=[
+        'instance', 'start', 'end', 'level', 'processing_timeline',
+    ])
+else:
+    template_rendered = Signal()
 
 node_element_colors = {}
 
