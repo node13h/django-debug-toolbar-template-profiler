@@ -6,8 +6,11 @@ import wrapt
 from debug_toolbar.panels import Panel
 from debug_toolbar.panels.sql.utils import contrasting_color_generator
 from django.dispatch import Signal
-from django.utils.translation import ugettext_lazy as _
-
+if django.VERSION < (3, 2):
+    from django.utils.translation import ugettext_lazy as _
+else:
+    from django.utils.translation import gettext_lazy as _
+    
 template_rendered = Signal(providing_args=[
     'instance', 'start', 'end', 'level', 'processing_timeline',
 ])
