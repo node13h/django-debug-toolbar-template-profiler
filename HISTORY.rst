@@ -6,6 +6,19 @@ Pending Release
 
 .. Insert new release notes below this line
 
+2.1.0 (2022-06-27)
+------------------
+
+* Break temlate parsing timeline by separate nodes
+
+  Thanks to Petr Dlouhý in
+  `PR #17 <https://github.com/node13h/django-debug-toolbar-template-profiler/pull/17>`__.
+
+* Django 3.1 through 4.1 compatibility changes
+
+  Thanks to Steven Mapes in
+  `PR #21 <https://github.com/node13h/django-debug-toolbar-template-profiler/pull/21>`__.
+
 2.0.2 (2021-01-13)
 ------------------
 
